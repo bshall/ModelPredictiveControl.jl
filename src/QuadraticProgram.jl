@@ -1,28 +1,28 @@
 type QuadraticProgram
-    N::Int
-    nx::Vector{Int}
-    nu::Vector{Int}
-    nb::Vector{Int}
-    nc::Vector{Int}
+    N::Cint
+    nx::Vector{Cint}
+    nu::Vector{Cint}
+    nb::Vector{Cint}
+    nc::Vector{Cint}
 
-    A::Vector{Matrix{Float64}}
-    B::Vector{Matrix{Float64}}
-    b::Vector{Vector{Float64}}
+    A::Vector{Matrix{Cdouble}}
+    B::Vector{Matrix{Cdouble}}
+    b::Vector{Vector{Cdouble}}
 
-    Q::Vector{Matrix{Float64}}
-    S::Vector{Matrix{Float64}}
-    R::Vector{Matrix{Float64}}
-    q::Vector{Vector{Float64}}
-    r::Vector{Vector{Float64}}
+    Q::Vector{Matrix{Cdouble}}
+    S::Vector{Matrix{Cdouble}}
+    R::Vector{Matrix{Cdouble}}
+    q::Vector{Vector{Cdouble}}
+    r::Vector{Vector{Cdouble}}
 
-    lb::Vector{Vector{Float64}}
-    ub::Vector{Vector{Float64}}
-    idx::Vector{Vector{Int}}
+    lb::Vector{Vector{Cdouble}}
+    ub::Vector{Vector{Cdouble}}
+    idx::Vector{Vector{Cint}}
 
-    lc::Vector{Vector{Float64}}
-    uc::Vector{Vector{Float64}}
-    C::Vector{Matrix{Float64}}
-    D::Vector{Matrix{Float64}}
+    lc::Vector{Vector{Cdouble}}
+    uc::Vector{Vector{Cdouble}}
+    C::Vector{Matrix{Cdouble}}
+    D::Vector{Matrix{Cdouble}}
 
     QuadraticProgram(N::Int) = new(N)
 end
@@ -76,10 +76,10 @@ function QuadraticProgram(N::Int, nx::Vector{Int}, nu::Vector{Int},
 end
 
 type QuadraticProgramResult
-    x::Vector{Vector{Float64}}
-    u::Vector{Vector{Float64}}
-    π::Vector{Vector{Float64}}
-    λ::Vector{Vector{Float64}}
+    x::Vector{Vector{Cdouble}}
+    u::Vector{Vector{Cdouble}}
+    π::Vector{Vector{Cdouble}}
+    λ::Vector{Vector{Cdouble}}
     # t::Vector{Vector{Float64}}
 end
 

@@ -8,7 +8,7 @@ nb = 0
 nc = 0
 
 A = [0.0 1.0; 0.0 0.0]
-B = [1.0; 1.0]
+B = [0.0; 1.0]
 Q = diagm([1.0, 1.0])
 R = diagm([1.0])
 
@@ -29,3 +29,4 @@ nbytes = getworkspacesize(HPMPCSolver, qp)
 work = Vector{Float64}(cld(nbytes, sizeof(Float64)))
 solver = HPMPCSolver(work)
 result = QuadraticProgramResult(qp)
+solve!(result, qp, solver)

@@ -4,6 +4,7 @@ export QuadraticProgram,
        QuadraticProgramResult,
        HPMPCSolver,
        getworkspacesize,
+       solve!
 
 depsjl = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
 if isfile(depsjl)
