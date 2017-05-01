@@ -1,6 +1,6 @@
 module ModelPredictiveControl
 
-export QuadraticProgram,
+export MultistageProblem,
        QuadraticProgramResult,
        HPMPCSolver,
        getworkspacesize,
@@ -16,7 +16,7 @@ end
 
 abstract AbstractSolver
 
-include("QuadraticProgram.jl")
+include("MultistageProblem.jl")
 include("HPMPC.jl")
 
 end # module

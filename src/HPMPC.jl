@@ -19,16 +19,16 @@ type HPMPCSolver <: AbstractSolver
     end
 end
 
-function getworkspacesize(::Type{HPMPCSolver}, qp::QuadraticProgram)
+function getworkspacesize(::Type{HPMPCSolver}, stages::MultistageProblem)
     size = ccall((:hpmpc_d_ip_ocp_hard_tv_work_space_size_bytes, libhpmpc),
                  Cint, (Cint, Ptr{Cint}, Ptr{Cint}, Ptr{Cint},
                  Ptr{Ptr{Cint}}, Ptr{Cint}, Cint),
-                 qp.N, qp.nx, qp.nu, qp.nb, qp.idx, qp.nc, qp.N)
+                 stages.N, stages.nx, stages.nu, stages.nb,
+                 stages.idx, stages.nc, stages.N)
 end
 
-function solve!(out::QuadraticProgramResult, qp::QuadraticProgram,
+function solve!(out::QuadraticProgramResult, stages::MultistageProblem,
                 solver::HPMPCSolver)
-
     nit = Ref{Cint}(0)
     status = ccall((:fortran_order_d_ip_ocp_hard_tv, libhpmpc), Cint,
                    (Ptr{Cint}, Cint, Cdouble, Cdouble,
@@ -45,15 +45,15 @@ function solve!(out::QuadraticProgramResult, qp::QuadraticProgram,
                     Ptr{Ptr{Cdouble}}, Ptr{Ptr{Cdouble}},
                     Ptr{Cdouble}, Ptr{Void}, Ptr{Cdouble}),
                    nit, solver.maxit, solver.μ₀, solver.tol,
-                   qp.N, qp.nx, qp.nu, qp.nb,
-                   qp.idx, qp.nc, qp.N, solver.warmstart,
-                   qp.A, qp.B,
-                   qp.b, qp.Q,
-                   qp.S, qp.R,
-                   qp.q, qp.r,
-                   qp.lb, qp.ub,
-                   qp.C, qp.D,
-                   qp.lc, qp.uc,
+                   stages.N, stages.nx, stages.nu, stages.nb,
+                   stages.idx, stages.nc, stages.N, solver.warmstart,
+                   stages.A, stages.B,
+                   stages.b, stages.Q,
+                   stages.S, stages.R,
+                   stages.q, stages.r,
+                   stages.lb, stages.ub,
+                   stages.C, stages.D,
+                   stages.lc, stages.uc,
                    out.x, out.u,
                    out.π, out.λ,
                    solver.res, solver.workspace, solver.stats)
