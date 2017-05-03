@@ -25,10 +25,17 @@ umax = [+0.04, +0.04, +0.04, +0.04]
 
 # road
 n = 3600
-t = 0:0.005:0.005n-0.005
-road = zeros(length(t))
-road[161:180] = 0.005*(1:20)
-road[181:200] = 0.1 - 0.005*(1:20)
+w = zeros(nx, length(n))
+w[2, 161:180] = 0.005*(1:20)
+w[2, 181:200] = 0.1 - 0.005*(1:20)
+w[6, 161:180] = 1.0
+w[6, 181:200] = -1.0
+
+# reduce resolution
+steps = 720
+wpre
+wpre = zeros(8, 720+N)
+simtime = 0:0.025:0.025steps-0.025
 
 stages = MultistageProblem(N, nx, nu, nb, nc, ncN)
 
@@ -65,15 +72,14 @@ work = zeros(cld(nbytes, sizeof(Float64)))
 solver = HPMPCSolver(work, 1e-8, 20, 50.0, false)
 result = QuadraticProgramResult(stages)
 
-steps = 720
 X = zeros(nx, steps+1)
 X[:, 1] = zeros(nx)
 Y = zeros(3, steps)
 U = zeros(nu, steps)
 for k = 1:steps
-    stages.b[1] .= Bw.*road[k] .+ A*X[:, k]
+    stages.b[1] .= Bw*wpre[:, k] .+ A*X[:, k]
     for i = 2:N
-        stages.b[i] .= Bw.*road[k+i-1]
+        stages.b[i] .= Bw*wpre[:, k+i-1]
     end
     status = solve!(result, stages, solver)
     if status == 0
@@ -81,5 +87,6 @@ for k = 1:steps
     else
         error("Some problem in solver")
     end
-    X[:, k+1] = A*X[:, k] + [B Bw]*[U[:, k]; road[k]]
+    X[:, k+1] = A*X[:, k] + [B Bw]*[U[:, k]; wpre[:, k]]
+    Y[:, k] = Cd*X[:, k] + Dd*[U[:, k]; wpre[:, k]]
 end
